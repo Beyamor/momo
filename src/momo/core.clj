@@ -3,8 +3,6 @@
 (declare ^:dynamic bind)
 (declare ^:dynamic return)
 
-(declare <-)
-
 (def monad-fs #{:bind :return})
 
 (defn keywordify-keys
@@ -33,6 +31,18 @@
   [m & body]
   `(binding ~(bindings m)
      ~@body))
+
+(defmacro <-
+  [bindings & body]
+  (reduce
+    (fn [body [sym expr]]
+      `(bind ~expr
+             (fn [~sym]
+               ~body)))
+    `(do ~@body)
+    (->> bindings
+      (partition 2)
+      reverse)))
 
 (defmonad Seq
           return (fn [v]
