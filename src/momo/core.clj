@@ -1,9 +1,11 @@
 (ns momo.core)
 
-(declare ^:dynamic bind)
-(declare ^:dynamic return)
+(def monad-fs #{:bind :return :zero :plus})
 
-(def monad-fs #{:bind :return})
+(doseq [f monad-fs
+        :let [sym (-> f name symbol)]]
+  (eval
+       `(declare ~(with-meta sym {:dynamic true}))))
 
 (defn keywordify-keys
   [m]
@@ -51,4 +53,8 @@
           bind (fn [s f]
                  (apply concat
                         (for [v s]
-                          (f v)))))
+                          (f v))))
+
+          zero []
+
+          plus concat)

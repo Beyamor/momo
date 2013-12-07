@@ -1,7 +1,8 @@
 (ns momo.core-test
   (:use clojure.test)
   (:require [momo.core :as m
-             :refer [<- return bind Seq]]))
+             :refer [<- return bind zero plus
+                     Seq]]))
 
 (deftest seq-test
          (m/with Seq
@@ -21,4 +22,12 @@
                  (is (= [1 2 2 3 3 4]
                         (<- [x [1 2 3]
                              y [x (inc x)]]
-                            (return y))))))
+                            (return y))))
+
+                 (is (= [] zero))
+
+                 (is (= [1 2 3]
+                        (plus [1 2 3] zero)))
+
+                 (is (= [1 2 3]
+                        (plus zero [1 2 3])))))
