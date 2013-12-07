@@ -58,3 +58,10 @@
           zero []
 
           plus concat)
+
+(defmonad Maybe
+          return identity
+
+          bind (fn [v f]
+                 (when-not (nil? v)
+                   (f v))))

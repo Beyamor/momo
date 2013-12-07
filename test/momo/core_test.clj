@@ -2,7 +2,7 @@
   (:use clojure.test)
   (:require [momo.core :as m
              :refer [<- return bind zero plus
-                     Seq]]))
+                     Seq Maybe]]))
 
 (deftest seq-test
          (m/with Seq
@@ -31,3 +31,24 @@
 
                  (is (= [1 2 3]
                         (plus zero [1 2 3])))))
+
+(deftest maybe-test
+         (m/with Maybe
+                 (is (= :foo
+                        (return :foo)))
+
+                 (is (= 2
+                        (bind 1 inc)))
+
+                 (is (= nil
+                        (bind nil inc)))
+
+                 (is (= 2
+                        (<- [x 1
+                             y (inc x)]
+                            (return y))))
+
+                 (is (= nil
+                        (<- [x nil
+                             y (inc x)]
+                            (return y))))))
