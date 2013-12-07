@@ -2,7 +2,7 @@
   (:use clojure.test)
   (:require [momo.core :as m
              :refer [<- return bind zero plus
-                     Seq Maybe]]))
+                     Seq Maybe Err]]))
 
 (deftest seq-test
          (m/with Seq
@@ -52,3 +52,17 @@
                         (<- [x nil
                              y (inc x)]
                             (return y))))))
+
+(deftest error-test
+         (m/with Err
+                 (is (= {:right 3}
+                        (<- [x (return 1)
+                             y (return (inc x))
+                             z (return (inc y))]
+                            (return z))))
+
+                 (is (= {:left :err}
+                        (<- [x (return 1)
+                             y {:left :err}
+                             z (return (inc y))]
+                            (return z))))))

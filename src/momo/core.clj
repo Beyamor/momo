@@ -65,3 +65,12 @@
           bind (fn [v f]
                  (when-not (nil? v)
                    (f v))))
+
+(defmonad Err
+          return (fn [x]
+                   {:right x})
+
+          bind (fn [mv f]
+                 (if (contains? mv :right)
+                   (f (:right mv))
+                   mv)))
