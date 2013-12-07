@@ -23,8 +23,9 @@
 (defn bindings
   [m]
   (->>
-    (for [f monad-fs]
-      `(~(symbol "momo.core" (name f)) (~m ~f)))
+    (for [f monad-fs
+          :let [qualified-f (symbol "momo.core" (name f))]]
+      `(~qualified-f (~m ~f)))
     (apply concat)
     vec))
 
@@ -35,4 +36,9 @@
 
 (defmonad Seq
           return (fn [v]
-                   [v]))
+                   [v])
+
+          bind (fn [s f]
+                 (apply concat
+                        (for [v s]
+                          (f v)))))
