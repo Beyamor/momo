@@ -106,28 +106,3 @@
                  (if (contains? mv :right)
                    (f (:right mv))
                    mv)))
-
-(defmonad State
-         return (fn [x]
-                  (fn [state]
-                    [x state]))
-
-         bind (fn [transformer f]
-                (fn [state]
-                  (let [[v new-state] (transformer state)]
-                    ((f v) new-state)))))
-
-(def get-state
-  (fn [state]
-    [state state]))
-
-(defn set-state
-  [new-state]
-  (fn [state]
-    [new-state new-state]))
-
-(defn update-state
-  [update]
-  (fn [state]
-    (let [updated-state (update state)]
-      [updated-state updated-state])))

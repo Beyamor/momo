@@ -2,8 +2,7 @@
   (:use clojure.test)
   (:require [momo.core :as m
              :refer [<- return bind zero plus chain lift join
-                     Seq Maybe Err State
-                     get-state set-state update-state]]))
+                     Seq Maybe Err]]))
 
 (deftest seq-test
          (m/with Seq
@@ -67,48 +66,6 @@
                              y {:left :err}
                              z (return (inc y))]
                             (return z))))))
-
-(deftest state-test
-         (m/with State
-           (let [pop (fn [[x & xs]]
-                       [x xs])
-
-                 push (fn [x]
-                        (fn [xs]
-                          [nil (conj xs x)]))]
-
-             (is (= [nil [8 3 0 2 1 0]]
-                    ((<- [a pop]
-                         (if (= a 5)
-                           (push 5)
-                           (chain
-                             (push 3)
-                             (push 8))))
-                       (list 9 0 2 1 0))))
-
-             (is (= [[1 2 3] [1 2 3]]
-                    ((chain
-                       (push 3)
-                       (push 2)
-                       (push 1)
-                       get-state)
-                       (list))))
-
-             (is (= [1]
-                    (second
-                      ((chain
-                         (push 3)
-                         (set-state [])
-                         (push 1))
-                         (list)))))
-
-             (is (= 3
-                    (second
-                      ((chain
-                         (update-state inc)
-                         (update-state inc)
-                         (update-state inc))
-                         0)))))))
 
 (deftest lifting-test
          (m/with Maybe
