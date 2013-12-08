@@ -12,12 +12,12 @@
              [x initial-log])
 
     bind (fn [[x existing-log] f]
-           (let [[new-x new-log] (f x)]
-             [new-x (append existing-log new-log)]))))
+           (let [[new-x message] (f x)]
+             [new-x (append existing-log message)]))))
 
 (defn tell
-  [log]
-  [nil log])
+  [message]
+  [nil message])
 
 (extend-protocol Writeable
   clojure.lang.IPersistentCollection
