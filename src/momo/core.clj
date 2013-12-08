@@ -98,3 +98,8 @@
 (def get-state
   (fn [state]
     [state state]))
+
+(defn set-state
+  [new-state]
+  (fn [state]
+    [nil new-state]))

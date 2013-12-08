@@ -3,7 +3,7 @@
   (:require [momo.core :as m
              :refer [<- return bind zero plus chain
                      Seq Maybe Err State
-                     get-state]]))
+                     get-state set-state]]))
 
 (deftest seq-test
          (m/with Seq
@@ -92,4 +92,12 @@
                        (push 2)
                        (push 1)
                        get-state)
-                       (list)))))))
+                       (list))))
+
+             (is (= [1]
+                    (second
+                      ((chain
+                         (push 3)
+                         (set-state [])
+                         (push 1))
+                         (list))))))))
