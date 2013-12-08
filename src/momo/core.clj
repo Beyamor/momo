@@ -61,6 +61,11 @@
   (bind mv (fn [x]
              (return (f x)))))
 
+(defn join
+  [mv]
+  (<- [inner-mv mv]
+      inner-mv))
+
 (defmonad Seq
           return (fn [v]
                    [v])
