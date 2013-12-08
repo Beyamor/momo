@@ -1,4 +1,5 @@
 (ns momo.core
+  (:use [momo.util :only [keywordify-keys]])
   (:refer-clojure :exclude [filter]))
 
 (def monad-fs #{:bind :return :zero :plus})
@@ -7,12 +8,6 @@
         :let [sym (-> f name symbol)]]
   (eval
        `(declare ~(with-meta sym {:dynamic true}))))
-
-(defn keywordify-keys
-  [m]
-  (into {}
-        (for [[k v] m]
-          [(keyword k) v])))
 
 (defn impl->monad
   [impl]

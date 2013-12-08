@@ -3,10 +3,10 @@
   (:require [momo.core :as m
              :refer [<- return bind]]
             [momo.writer :as writer
-             :refer [Writer tell]]))
+             :refer [Writer StringLog tell]]))
 
 (deftest writer-test
-         (m/with (Writer :string)
+         (m/with (Writer StringLog)
                  (is (= "message"
                         (second (tell "message"))))
 
