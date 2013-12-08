@@ -46,6 +46,16 @@
       (partition 2)
       reverse)))
 
+(defmacro chain
+  [& exprs]
+  (let [bindings (->>
+                   (for [expr (butlast exprs)]
+                     [(gensym) expr])
+                   (apply concat)
+                   vec)]
+    `(<- ~bindings
+         ~(last exprs))))
+
 (defmonad Seq
           return (fn [v]
                    [v])

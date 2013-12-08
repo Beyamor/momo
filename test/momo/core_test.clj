@@ -1,7 +1,7 @@
 (ns momo.core-test
   (:use clojure.test)
   (:require [momo.core :as m
-             :refer [<- return bind zero plus
+             :refer [<- return bind zero plus chain
                      Seq Maybe Err State]]))
 
 (deftest seq-test
@@ -80,6 +80,7 @@
                     ((<- [a pop]
                          (if (= a 5)
                            (push 5)
-                           (<- [_ (push 3)]
-                               (push 8))))
+                           (chain
+                             (push 3)
+                             (push 8))))
                        (list 9 0 2 1 0)))))))
