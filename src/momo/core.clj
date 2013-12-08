@@ -102,4 +102,10 @@
 (defn set-state
   [new-state]
   (fn [state]
-    [nil new-state]))
+    [new-state new-state]))
+
+(defn update-state
+  [update]
+  (fn [state]
+    (let [updated-state (update state)]
+      [updated-state updated-state])))
