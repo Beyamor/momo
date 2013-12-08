@@ -1,7 +1,7 @@
 (ns momo.writer
   (:use [momo.util :only [keywordify-keys]])
   (:require [momo.core :as m
-             :refer [monad]])
+             :refer [monad <- return]])
   (:refer-clojure :exclude [empty]))
 
 (defn Writer
@@ -10,18 +10,32 @@
     return (fn [x]
              [x empty])
 
-    bind (fn [[x existing-log] f]
-           (let [[new-x message] (f x)]
-             [new-x (append existing-log message)]))))
+    bind (fn [[x existing-log]    f]
+           (let [[new-x new-log]  (f x)]
+             [new-x (append existing-log new-log)]))))
 
 (defn tell
-  [message]
-  [nil message])
+  [log]
+  [nil log])
 
-(defmacro defwriter
+(defn listen
+  [[x log]]
+  [[x log] log])
+
+(defn pass
+  [[a f] log]
+  [a (f log)])
+
+(defn censor
+  [f m]
+  (pass
+    (<- [a m]
+          (return [a f]))))
+
+(defmacro deflog
   [name & {:as impl}]
   `(def ~name ~(keywordify-keys impl)))
 
-(defwriter StringLog
-           empty   ""
-           append  str)
+(deflog StringLog
+        empty   ""
+        append  str)
