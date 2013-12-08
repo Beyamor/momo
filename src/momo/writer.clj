@@ -8,7 +8,7 @@
 (defn Writer
   [initial-log]
   (monad
-    result (fn [x]
+    return (fn [x]
              [x initial-log])
 
     bind (fn [[x existing-log] f]
