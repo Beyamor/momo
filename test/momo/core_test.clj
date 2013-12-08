@@ -112,10 +112,23 @@
 
 (deftest lifting-test
          (m/with Maybe
-                 (= 24
-                    (lift (partial * 3) 8))))
+                 (is (= 24
+                        (lift (partial * 3) 8)))))
 
 (deftest joining-test
          (m/with Seq
-                 (= [1 2 3]
-                    (join [[1] [2 3]]))))
+                 (is (= [1 2 3]
+                        (join [[1] [2 3]])))))
+
+(deftest filtering-test
+         (m/with Maybe
+                 (is (= [2 4 6 8]
+                        (m/filter even? [2 4 6 8]))))
+
+         (m/with Seq
+                 (is (= [[1 2 3]]
+                        (-> (fn [x]
+                              (if (< x 4)
+                                [true]
+                                [false]))
+                        (m/filter [9 1 5 2 10 3]))))))

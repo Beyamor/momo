@@ -1,4 +1,5 @@
-(ns momo.core)
+(ns momo.core
+  (:refer-clojure :exclude [filter]))
 
 (def monad-fs #{:bind :return :zero :plus})
 
@@ -58,13 +59,24 @@
 
 (defn lift
   [f mv]
-  (bind mv (fn [x]
-             (return (f x)))))
+  (<- [x mv]
+      (return (f x))))
 
 (defn join
   [mv]
   (<- [inner-mv mv]
       inner-mv))
+
+(defn filter
+  [pred? xs]
+  (if (empty? xs)
+    (return [])
+    (let [[x & xs] xs
+          filtered-xs (filter pred? xs)]
+      (<- [keep? (pred? x)]
+          (if keep?
+            (lift (partial cons x) filtered-xs)
+            filtered-xs)))))
 
 (defmonad Seq
           return (fn [v]
