@@ -2,7 +2,7 @@
   (:use clojure.test)
   (:require [momo.core :as m
              :refer [<- return bind zero plus
-                     Seq Maybe Err]]))
+                     Seq Maybe Err State]]))
 
 (deftest seq-test
          (m/with Seq
@@ -66,3 +66,20 @@
                              y {:left :err}
                              z (return (inc y))]
                             (return z))))))
+
+(deftest state-test
+         (m/with State
+           (let [pop (fn [[x & xs]]
+                       [x xs])
+
+                 push (fn [x]
+                        (fn [xs]
+                          [nil (conj xs x)]))]
+
+             (is (= [nil [8 3 0 2 1 0]]
+                    ((<- [a pop]
+                         (if (= a 5)
+                           (push 5)
+                           (<- [_ (push 3)]
+                               (push 8))))
+                       (list 9 0 2 1 0)))))))
