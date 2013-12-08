@@ -2,7 +2,8 @@
   (:use clojure.test)
   (:require [momo.core :as m
              :refer [<- return bind zero plus chain
-                     Seq Maybe Err State]]))
+                     Seq Maybe Err State
+                     get-state]]))
 
 (deftest seq-test
          (m/with Seq
@@ -83,4 +84,12 @@
                            (chain
                              (push 3)
                              (push 8))))
-                       (list 9 0 2 1 0)))))))
+                       (list 9 0 2 1 0))))
+
+             (is (= [[1 2 3] [1 2 3]]
+                    ((chain
+                       (push 3)
+                       (push 2)
+                       (push 1)
+                       get-state)
+                       (list)))))))

@@ -94,3 +94,7 @@
                 (fn [state]
                   (let [[v new-state] (transformer state)]
                     ((f v) new-state)))))
+
+(def get-state
+  (fn [state]
+    [state state]))
