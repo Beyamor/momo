@@ -1,7 +1,7 @@
 (ns momo.core-test
   (:use clojure.test)
   (:require [momo.core :as m
-             :refer [<- return bind zero plus chain
+             :refer [<- return bind zero plus chain lift
                      Seq Maybe Err State
                      get-state set-state update-state]]))
 
@@ -109,3 +109,8 @@
                          (update-state inc)
                          (update-state inc))
                          0)))))))
+
+(deftest lifting-test
+         (m/with Maybe
+                 (= 24
+                    (lift (partial * 3) 8))))

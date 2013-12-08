@@ -56,6 +56,11 @@
     `(<- ~bindings
          ~(last exprs))))
 
+(defn lift
+  [f mv]
+  (bind mv (fn [x]
+             (return (f x)))))
+
 (defmonad Seq
           return (fn [v]
                    [v])
