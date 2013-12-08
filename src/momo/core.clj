@@ -14,12 +14,19 @@
         (for [[k v] m]
           [(keyword k) v])))
 
+(defn impl->monad
+  [impl]
+  (-> impl
+    keywordify-keys
+    (select-keys monad-fs)))
+
+(defmacro monad
+  [& {:as impl}]
+  (impl->monad impl))
+
 (defmacro defmonad
   [m & {:as impl}]
-  (let [impl (-> impl
-               keywordify-keys
-               (select-keys monad-fs))]
-    `(def ~m ~impl)))
+    `(def ~m ~(impl->monad impl)))
 
 (defn bindings
   [m]
