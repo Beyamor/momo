@@ -6,7 +6,7 @@
              :refer [Writer tell]]))
 
 (deftest writer-test
-         (m/with (Writer "")
+         (m/with (Writer :string)
                  (is (= "message"
                         (second (tell "message"))))
 
