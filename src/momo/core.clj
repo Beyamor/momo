@@ -7,7 +7,7 @@
 (doseq [f monad-fs
         :let [sym (-> f name symbol)]]
   (eval
-       `(declare ~(with-meta sym {:dynamic true}))))
+    `(declare ~(with-meta sym {:dynamic true}))))
 
 (defn impl->monad
   [impl]
@@ -21,7 +21,7 @@
 
 (defmacro defmonad
   [m & {:as impl}]
-    `(def ~m ~(impl->monad impl)))
+  `(def ~m ~(impl->monad impl)))
 
 (defn bindings
   [m]
@@ -58,6 +58,18 @@
                    vec)]
     `(<- ~bindings
          ~(last exprs))))
+
+(defmacro pipe
+  [& exprs]
+  (let [sym (gensym)
+        bindings (->>
+                   (for [expr exprs]
+                     [sym `(~expr ~sym)])
+                   (apply concat)
+                   vec)]
+    `(fn [~sym]
+       (<- ~bindings
+           (return ~sym)))))
 
 (defn lift
   [f mv]

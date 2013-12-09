@@ -20,9 +20,9 @@
                                 (c (dec x))))]
 
                    (is (= 21
-                          ((<- [x (return 10)
-                                x (fn-a x)
-                                x (fn-b x)
-                                x (fn-c x)]
-                               (return x))
+                          (((m/pipe
+                             fn-a
+                             fn-b
+                             fn-c)
+                              10)
                              identity))))))
